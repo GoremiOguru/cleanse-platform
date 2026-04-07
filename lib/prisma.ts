@@ -1,16 +1,20 @@
-import { PrismaClient } from "@prisma/client";
-import { PrismaLibSql } from "@prisma/adapter-libsql";
+import { PrismaClient } from '@prisma/client'
+import { PrismaLibSql } from '@prisma/adapter-libsql'
+import { createClient } from '@libsql/client'
 
-const config = {
-  url: process.env.DATABASE_URL || "file:./dev.db",
-  authToken: process.env.TURSO_AUTH_TOKEN,
-};
-const adapter = new PrismaLibSql(config);
+const prismaClientSingleton = () => {
+  const adapter = new PrismaLibSql({
+    url: process.env.DATABASE_URL!,
+    authToken: process.env.TURSO_AUTH_TOKEN!,
+  })
+  return new PrismaClient({ adapter })
+}
 
-const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
+declare const globalThis: {
+  prismaGlobal: ReturnType<typeof prismaClientSingleton>;
+} & typeof global;
 
-export const prisma = globalForPrisma.prisma || new PrismaClient({ adapter });
+export const prisma = globalThis.prismaGlobal ?? prismaClientSingleton()
+export default prisma
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
-
-// Force Turbopack Cache Invalidation
+if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma
