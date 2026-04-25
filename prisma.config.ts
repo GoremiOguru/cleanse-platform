@@ -7,6 +7,7 @@ export default defineConfig({
   datasource: {
     url: process.env.DATABASE_URL!,
   },
+  // @ts-ignore - The type definition for PrismaConfig might not yet include 'adapter' in all versions
   adapter: new PrismaLibSql({
     url: process.env.DATABASE_URL!,
     authToken: process.env.TURSO_AUTH_TOKEN!,
