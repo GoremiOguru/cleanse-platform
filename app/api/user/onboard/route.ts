@@ -10,7 +10,17 @@ export async function POST(req: Request) {
     }
     
     const data = await req.json();
-    const { role, isAddicted, addictionType, reason, referral } = data;
+    const { 
+      role, 
+      isAddicted, 
+      addictionType, 
+      reason, 
+      referral,
+      personalityType,
+      personalityLabel,
+      personalityTraits,
+      personalityDescription
+    } = data;
     const userId = session.user.id;
 
     const updatedUser = await prisma.user.update({
@@ -21,6 +31,10 @@ export async function POST(req: Request) {
         addictionType,
         reason,
         referral,
+        personalityType,
+        personalityLabel,
+        personalityTraits,
+        personalityDescription
       },
     });
 

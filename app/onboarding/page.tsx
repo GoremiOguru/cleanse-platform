@@ -11,11 +11,145 @@ type OnboardingData = {
   addictionType: string | null;
   reason: string;
   referral: string | null;
+  personalityType?: string;
+  personalityLabel?: string;
+  personalityTraits?: string;
+  personalityDescription?: string;
+};
+
+const QUIZ_QUESTIONS = [
+  {
+    id: 1,
+    question: "When faced with a sudden setback, my first instinct is to...",
+    options: [
+      { text: "Analyze what went wrong and build a plan", type: "ARCHITECT" },
+      { text: "Reach out to someone I trust for support", type: "CATALYST" },
+      { text: "Take a deep breath and stay present", type: "ANCHOR" },
+      { text: "Protect my peace and honor my values", type: "GUARDIAN" }
+    ]
+  },
+  {
+    id: 2,
+    question: "I feel most accomplished and energized when I...",
+    options: [
+      { text: "Solve a complex challenge systematically", type: "ARCHITECT" },
+      { text: "Connect deeply with a new community", type: "CATALYST" },
+      { text: "Maintain a steady, peaceful routine", type: "ANCHOR" },
+      { text: "Fulfill a duty or promise I made", type: "GUARDIAN" }
+    ]
+  },
+  {
+    id: 3,
+    question: "In my journey of growth, I value [X] the most:",
+    options: [
+      { text: "Clarity and understanding", type: "ARCHITECT" },
+      { text: "Compassion and shared stories", type: "CATALYST" },
+      { text: "Equanimity and inner silence", type: "ANCHOR" },
+      { text: "Integrity and tradition", type: "GUARDIAN" }
+    ]
+  },
+  {
+    id: 4,
+    question: "When I think about my future self, I see someone who is...",
+    options: [
+      { text: "Master of their habits and mind", type: "ARCHITECT" },
+      { text: "A source of light and connection for others", type: "CATALYST" },
+      { text: "Unshakeable amidst any storm", type: "ANCHOR" },
+      { text: "A faithful steward of their legacy", type: "GUARDIAN" }
+    ]
+  },
+  {
+    id: 5,
+    question: "My primary way of dealing with stress is...",
+    options: [
+      { text: "Researching and strategizing solutions", type: "ARCHITECT" },
+      { text: "Talking it out and seeking empathy", type: "CATALYST" },
+      { text: "Meditating or focusing on my breath", type: "ANCHOR" },
+      { text: "Returning to my core principles and faith", type: "GUARDIAN" }
+    ]
+  },
+  {
+    id: 6,
+    question: "I am most likely to be inspired by...",
+    options: [
+      { text: "A brilliant breakthrough or discovery", type: "ARCHITECT" },
+      { text: "A story of profound human connection", type: "CATALYST" },
+      { text: "A life of quiet, steady devotion", type: "ANCHOR" },
+      { text: "An act of unwavering courage and honor", type: "GUARDIAN" }
+    ]
+  },
+  {
+    id: 7,
+    question: "My ideal environment for healing is...",
+    options: [
+      { text: "Highly structured and data-driven", type: "ARCHITECT" },
+      { text: "Warm, social, and collaborative", type: "CATALYST" },
+      { text: "Minimalist, quiet, and serene", type: "ANCHOR" },
+      { text: "Sacred, traditional, and meaningful", type: "GUARDIAN" }
+    ]
+  },
+  {
+    id: 8,
+    question: "I tend to make decisions based on...",
+    options: [
+      { text: "Logic, evidence, and efficiency", type: "ARCHITECT" },
+      { text: "Impact on others and emotional resonance", type: "CATALYST" },
+      { text: "Intuition and inner alignment", type: "ANCHOR" },
+      { text: "Consistency with my values and history", type: "GUARDIAN" }
+    ]
+  },
+  {
+    id: 9,
+    question: "People often come to me when they need...",
+    options: [
+      { text: "A strategic plan or objective advice", type: "ARCHITECT" },
+      { text: "Encouragement and a listening ear", type: "CATALYST" },
+      { text: "A calming presence and perspective", type: "ANCHOR" },
+      { text: "A reliable partner who keeps their word", type: "GUARDIAN" }
+    ]
+  },
+  {
+    id: 10,
+    question: "What is your greatest 'uniqueness' in your eyes?",
+    options: [
+      { text: "My ability to see patterns others miss", type: "ARCHITECT" },
+      { text: "My capacity to love and bridge divides", type: "CATALYST" },
+      { text: "My stillness in a chaotic world", type: "ANCHOR" },
+      { text: "My unwavering loyalty to what I believe", type: "GUARDIAN" }
+    ]
+  }
+];
+
+const PERSONALITY_DETAILS: Record<string, { label: string, traits: string, description: string }> = {
+  ARCHITECT: {
+    label: "The Resilient Architect",
+    traits: "Analytical, Structured, Strategic",
+    description: "You find strength in logic and systems. Your path to recovery involves understanding the mechanics of habit and building rigorous, data-backed routines that leave no room for error."
+  },
+  CATALYST: {
+    label: "The Radiant Catalyst",
+    traits: "Empathetic, Social, Dynamic",
+    description: "You are powered by connection. You thrive in community and find your greatest breakthroughs when sharing your journey and being a source of light for others."
+  },
+  ANCHOR: {
+    label: "The Stoic Anchor",
+    traits: "Calm, Consistent, Grounded",
+    description: "You are the steady presence. Your recovery is built on the power of the present moment and maintaining a peaceful, unshakeable core regardless of external circumstances."
+  },
+  GUARDIAN: {
+    label: "The Devoted Guardian",
+    traits: "Principled, Protective, Faithful",
+    description: "You are driven by deep values and legacy. Your strength comes from protecting what is sacred and honoring your commitments to a higher purpose and those you love."
+  }
 };
 
 export default function OnboardingPage() {
   const router = useRouter();
   const [step, setStep] = useState(1);
+  const [quizIdx, setQuizIdx] = useState(0);
+  const [scores, setScores] = useState<Record<string, number>>({
+    ARCHITECT: 0, CATALYST: 0, ANCHOR: 0, GUARDIAN: 0
+  });
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<OnboardingData>({
     role: null,
@@ -27,6 +161,35 @@ export default function OnboardingPage() {
 
   const handleNext = () => setStep((s) => s + 1);
   const handleBack = () => setStep((s) => Math.max(1, s - 1));
+
+  const handleQuizAnswer = (type: string) => {
+    const newScores = { ...scores, [type]: scores[type] + 1 };
+    setScores(newScores);
+    
+    if (quizIdx < QUIZ_QUESTIONS.length - 1) {
+      setQuizIdx(quizIdx + 1);
+    } else {
+      // Calculate final personality
+      let maxScore = -1;
+      let finalType = "ARCHITECT";
+      
+      Object.entries(newScores).forEach(([t, s]) => {
+        if (s > maxScore) {
+          maxScore = s;
+          finalType = t;
+        }
+      });
+
+      const details = PERSONALITY_DETAILS[finalType];
+      updateData({
+        personalityType: finalType,
+        personalityLabel: details.label,
+        personalityTraits: details.traits,
+        personalityDescription: details.description
+      });
+      handleNext();
+    }
+  };
 
   const completeOnboarding = async () => {
     setLoading(true);
@@ -41,11 +204,9 @@ export default function OnboardingPage() {
         throw new Error("Failed to save onboarding data");
       }
       
-      // Update the user session in next-auth client (if needed) but page redirect triggers a load anyway
       router.push("/dashboard");
     } catch (e) {
       console.error(e);
-      // In a real app we'd show an error toast here
     }
     setLoading(false);
   };
@@ -53,6 +214,8 @@ export default function OnboardingPage() {
   const updateData = (fields: Partial<OnboardingData>) => {
     setData((prev) => ({ ...prev, ...fields }));
   };
+
+  const totalSteps = 6;
 
   return (
     <main className="min-h-screen bg-zinc-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 selection:bg-emerald-100 selection:text-emerald-900">
@@ -70,12 +233,16 @@ export default function OnboardingPage() {
         <div className="absolute top-0 left-0 w-full h-1.5 bg-zinc-100">
           <div 
             className="h-full bg-emerald-500 transition-all duration-500 ease-out"
-            style={{ width: `${(step / 5) * 100}%` }}
+            style={{ width: `${(step / totalSteps) * 100}%` }}
           />
         </div>
 
         <div className="mb-10 text-center text-sm font-bold text-emerald-600 tracking-wider uppercase">
-          Step {step} of 5
+          {step === 5 ? (
+             <span>Personality Quiz: Q{quizIdx + 1} of 10</span>
+          ) : (
+             <span>Step {step} of {totalSteps}</span>
+          )}
         </div>
 
         <AnimatePresence mode="wait">
@@ -240,16 +407,65 @@ export default function OnboardingPage() {
                   disabled={!data.reason.trim() || !data.referral}
                   className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-8 py-3 rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Continue
+                  Continue to Personality Quiz
                 </button>
               </div>
             </motion.div>
           )}
 
-          {/* STEP 5: FINAL CONFIRMATION */}
+          {/* STEP 5: PERSONALITY QUIZ */}
           {step === 5 && (
             <motion.div
-              key="step5"
+              key={`quiz-${quizIdx}`}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-6"
+            >
+              <div className="text-center">
+                <h2 className="text-3xl font-bold text-zinc-900 mb-4">Discover Your Unique Traits</h2>
+                <p className="text-zinc-500 mb-8">This helps us tailor your recovery path to your natural strengths.</p>
+              </div>
+
+              <div className="bg-zinc-50 p-6 rounded-2xl border border-zinc-100 mb-8">
+                <h3 className="text-xl font-bold text-zinc-800 text-center leading-relaxed">
+                  {QUIZ_QUESTIONS[quizIdx].question}
+                </h3>
+              </div>
+
+              <div className="grid gap-4">
+                {QUIZ_QUESTIONS[quizIdx].options.map((opt, i) => (
+                  <button
+                    key={i}
+                    onClick={() => handleQuizAnswer(opt.type)}
+                    className="w-full p-5 rounded-xl border-2 border-zinc-100 bg-white hover:border-emerald-400 hover:bg-emerald-50 transition-all text-left font-medium text-zinc-700 flex items-center gap-4 group"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-zinc-100 text-zinc-500 flex items-center justify-center font-bold text-sm group-hover:bg-emerald-500 group-hover:text-white transition-colors">
+                      {String.fromCharCode(65 + i)}
+                    </div>
+                    {opt.text}
+                  </button>
+                ))}
+              </div>
+
+              <div className="mt-8 text-center">
+                <button 
+                  onClick={() => {
+                    if (quizIdx > 0) setQuizIdx(quizIdx - 1);
+                    else handleBack();
+                  }} 
+                  className="text-zinc-400 hover:text-zinc-600 font-semibold"
+                >
+                  Go Back
+                </button>
+              </div>
+            </motion.div>
+          )}
+
+          {/* STEP 6: FINAL CONFIRMATION */}
+          {step === 6 && (
+            <motion.div
+              key="step6"
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               className="text-center"
@@ -257,14 +473,23 @@ export default function OnboardingPage() {
               <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6">
                 <HelpCircle className="w-10 h-10" />
               </div>
-              <h2 className="text-3xl font-bold text-zinc-900 mb-4">You are not alone.</h2>
+              <h2 className="text-3xl font-bold text-zinc-900 mb-4">Profile Analysis Complete.</h2>
+              
+              <div className="bg-emerald-50 p-6 rounded-3xl border border-emerald-100 mb-8 text-left">
+                <h3 className="text-emerald-800 font-bold text-sm uppercase tracking-wider mb-2">Your Personality Result:</h3>
+                <p className="text-2xl font-bold text-emerald-900 mb-2">{data.personalityLabel}</p>
+                <p className="text-emerald-700 text-sm leading-relaxed">
+                  {data.personalityDescription}
+                </p>
+              </div>
+
               <p className="text-zinc-600 mb-10 text-lg max-w-md mx-auto">
                 Your profile has been mapped perfectly. Our network is now adjusting to ensure your profound privacy while prioritizing clinical care.
               </p>
               
               <div className="flex gap-4 justify-center">
-                <button onClick={handleBack} className="px-6 py-4 rounded-xl border border-zinc-200 text-zinc-600 font-bold hover:bg-zinc-50 transition-colors">
-                  Review Answers
+                <button onClick={() => setStep(5)} className="px-6 py-4 rounded-xl border border-zinc-200 text-zinc-600 font-bold hover:bg-zinc-50 transition-colors">
+                  Retake Quiz
                 </button>
                 <button 
                   onClick={completeOnboarding}

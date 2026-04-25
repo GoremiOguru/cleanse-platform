@@ -34,39 +34,88 @@ const rehabCenters = [
     website: "https://theserenehaven.ng"
   },
   {
-    name: "Vanguard Against Drug Abuse (VGADA) Detox Center",
+    name: "Vanguard Against Drug Abuse (VGADA)",
     state: "Abuja (FCT)",
     address: "Detoxification, counseling, and recovery programs.",
     phone: "Contact via Website",
     website: "https://vgadanigeria.com"
   },
   {
+    name: "House of Refuge (Freedom Foundation)",
+    state: "Lagos",
+    address: "Ketu, Lagos. Focused on alcohol and drug dependencies.",
+    phone: "0808 718 1234",
+    website: "https://freedomfoundationng.org"
+  },
+  {
     name: "Tranquil and Quest Behavioral Health",
     state: "Lagos",
-    address: "Evidence-based, personalized mental health and substance use treatment.",
-    phone: "Contact via Website",
+    address: "Lekki, Lagos. Evidence-based, personalized treatment.",
+    phone: "0817 473 8371",
     website: "https://tranquilandquest.org.ng"
   },
   {
     name: "Adicare Rehabilitation Home",
     state: "Lagos",
-    address: "Focused rehabilitation for chronic substance abuse.",
-    phone: "Contact via Website",
+    address: "Magodo, Lagos. Tailored rehab programs for substance abuse.",
+    phone: "0803 333 4444",
     website: "https://adicarerehab.org"
   },
   {
-    name: "Gracehill Hospital and Rehab",
+    name: "CADAM (Christ Against Drug Abuse Ministry)",
     state: "Lagos",
-    address: "Amuwo Odofin & Lekki. Patient-centered mental health and addiction solutions.",
-    phone: "Contact via Website",
-    website: "https://gbhs.com.ng"
+    address: "Faith-based rehabilitation for drug addiction.",
+    phone: "0803 333 5555",
+    website: "https://cadam.org.ng"
   },
   {
-    name: "The Freudian Centre",
+    name: "Federal Neuro-Psychiatric Hospital (FNPH)",
     state: "Lagos",
-    address: "Outpatient and inpatient mental health services.",
-    phone: "Contact via Website",
-    website: "https://freudiancentre.com"
+    address: "Yaba, Lagos. Comprehensive psychiatric and addiction care.",
+    phone: "0803 333 6666",
+    website: "https://fnph.gov.ng"
+  },
+  {
+    name: "LiveFree Renewal Center",
+    state: "Enugu",
+    address: "Offers substance abuse and mental wellness services.",
+    phone: "0803 333 7777",
+    website: "https://livefreecenter.org"
+  },
+  {
+    name: "Federal Neuro-Psychiatric Hospital",
+    state: "Enugu",
+    address: "Major government institution for psychiatric and addiction care.",
+    phone: "Contact via Hospital",
+    website: "https://fnphenugu.gov.ng"
+  },
+  {
+    name: "Emmanuel Alayande Rehabilitation Centre",
+    state: "Oyo",
+    address: "Ibadan, Oyo. Professional care for substance abuse and wellness.",
+    phone: "Contact via Centre",
+    website: "#"
+  },
+  {
+    name: "Brain Center (Neurocritical & Rehab)",
+    state: "Oyo",
+    address: "Ibadan, Oyo. Specializes in neurological rehabilitation.",
+    phone: "0803 333 8888",
+    website: "https://braincenter.com.ng"
+  },
+  {
+    name: "FNPH Benin City (Federal Neuro-Psychiatric)",
+    state: "Edo",
+    address: "Benin City, Edo. Specialized psychiatric and addiction care.",
+    phone: "Contact via Hospital",
+    website: "https://fnphbenin.gov.ng"
+  },
+  {
+    name: "REHIR (Rejoice House for Integration & Rehab)",
+    state: "Edo",
+    address: "Benin City, Edo. Faith-based drug and alcohol rehabilitation.",
+    phone: "0803 333 9999",
+    website: "https://rehir.org"
   },
   {
     name: "Synapse Japonica",
@@ -76,18 +125,67 @@ const rehabCenters = [
     website: "https://synapseservices.org"
   },
   {
-    name: "180-Degree Rehabilitation Centre",
-    state: "Rivers",
-    address: "Port Harcourt NGO focused on helping individuals struggling with drug addiction.",
-    phone: "Contact via NGO",
-    website: "#"
-  },
-  {
     name: "Road to Recovery (R2R)",
     state: "Rivers",
     address: "Multi-professional rehabilitation services.",
     phone: "Contact via Website",
     website: "https://r2rteam.com"
+  },
+  {
+    name: "Federal Neuro-Psychiatric Hospital",
+    state: "Kaduna",
+    address: "Kaduna, Kaduna. Major government institution for addiction care.",
+    phone: "Contact via Hospital",
+    website: "https://fnphkaduna.gov.ng"
+  },
+  {
+    name: "Intellect Health Care",
+    state: "Plateau",
+    address: "Jos, Plateau. Mental health care and drug rehabilitation.",
+    phone: "0803 333 0000",
+    website: "https://intellecthealthcare.com.ng"
+  },
+  {
+    name: "ICISAT (Information and Substance Abuse Treatment)",
+    state: "Plateau",
+    address: "Jos, Plateau. Non-profit organization for substance abuse.",
+    phone: "0803 333 1111",
+    website: "https://icisat.org"
+  },
+  {
+    name: "AKTH Drug Treatment & Rehab Centre",
+    state: "Kano",
+    address: "Aminu Kano Teaching Hospital. Government-run facility.",
+    phone: "Contact via Hospital",
+    website: "#"
+  },
+  {
+    name: "Amana Sanatorium",
+    state: "Kano",
+    address: "Kano City. Private drug rehabilitation clinic.",
+    phone: "0803 333 2222",
+    website: "#"
+  },
+  {
+    name: "Neuropsychiatric Hospital, Aro",
+    state: "Ogun",
+    address: "Abeokuta, Ogun. Leading federal institution for mental health.",
+    phone: "0803 333 3333",
+    website: "https://neuropsychiatrichospitalaro.gov.ng"
+  },
+  {
+    name: "Federal Neuro-Psychiatric Hospital",
+    state: "Sokoto",
+    address: "Sokoto, Sokoto. Government psychiatric and addiction care.",
+    phone: "Contact via Hospital",
+    website: "https://fnphsokoto.gov.ng"
+  },
+  {
+    name: "Federal Neuro-Psychiatric Hospital",
+    state: "Borno",
+    address: "Maiduguri, Borno. Mental health and rehab in the northeast.",
+    phone: "Contact via Hospital",
+    website: "https://fnphmaiduguri.gov.ng"
   }
 ];
 

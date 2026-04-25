@@ -1,4 +1,4 @@
-import { EyeOff, Wind, Pill, Wine } from "lucide-react";
+import { EyeOff, Wind, Pill, Wine, Shield } from "lucide-react";
 import Link from "next/link";
 
 const addictions = [
@@ -25,6 +25,12 @@ const addictions = [
     description: "Tailored private assessments and recovery programs specifically crafted to combat strong alcohol and substance dependencies.",
     icon: Wine,
     href: "/addictions/substance-abuse"
+  },
+  {
+    title: "Sexual Abuse",
+    description: "Confidential recovery and support for survivors of sexual assault and trauma. You are not alone on your path to healing.",
+    icon: Shield,
+    href: "/addictions/sexual-abuse"
   }
 ];
 

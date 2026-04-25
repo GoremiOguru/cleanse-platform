@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import CheckInCard from "@/components/CheckInCard";
+import PersonalityCard from "@/components/PersonalityCard";
+import CounselorCard from "@/components/CounselorCard";
 import { LogOut, BookOpen, User, PhoneCall, ShieldCheck, MapPin } from "lucide-react";
 import Link from "next/link";
 
@@ -25,8 +27,8 @@ export default async function DashboardPage() {
     redirect("/auth");
   }
 
-  // Redirect to onboarding if they haven't set their role yet 
-  if (!user.role) {
+  // Redirect to onboarding if they haven't completed their profile
+  if (!user.role || !user.personalityType) {
     redirect("/onboarding");
   }
 
@@ -64,7 +66,9 @@ export default async function DashboardPage() {
         {/* Left Column: Greeting & Check-ins */}
         <div className="lg:col-span-2 space-y-8">
           <div>
-            <h1 className="text-4xl font-bold text-zinc-900 mb-2">Welcome back.</h1>
+            <h1 className="text-4xl font-bold text-zinc-900 mb-2">
+              Welcome back{user.firstName ? `, ${user.firstName}` : ''}.
+            </h1>
             <p className="text-lg text-zinc-500">Your secure, private dashboard built entirely around your needs.</p>
           </div>
 
@@ -92,34 +96,46 @@ export default async function DashboardPage() {
             </div>
           )}
 
-          {/* Dynamic Resources tailored to their struggle */}
-          <div>
-            <h2 className="text-2xl font-bold text-zinc-900 mb-6 flex items-center gap-3">
-              <BookOpen className="w-6 h-6 text-emerald-600" />
-              Recommended For Your Journey
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="bg-white rounded-2xl p-6 border border-zinc-100 hover:shadow-lg transition-shadow cursor-pointer group">
-                <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <BookOpen className="w-5 h-5" />
-                </div>
-                <h3 className="font-bold text-lg text-zinc-900 mb-2">Rewiring the Brain</h3>
-                <p className="text-zinc-500 text-sm">A 5-part video series on the neuroplasticity of recovery and building new habits.</p>
+          {/* Elite Therapeutic Support Section */}
+          <div className="pt-8">
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <h2 className="text-3xl font-bold text-zinc-900 flex items-center gap-3">
+                  <PhoneCall className="w-8 h-8 text-emerald-600" />
+                  Elite Therapeutic Support
+                </h2>
+                <p className="text-zinc-500 mt-1">Book private, secure sessions with some of our highly vetted specialists.</p>
               </div>
+             
+            </div>
 
-              <div className="bg-white rounded-2xl p-6 border border-zinc-100 hover:shadow-lg transition-shadow cursor-pointer group">
-                <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <PhoneCall className="w-5 h-5" />
-                </div>
-                <h3 className="font-bold text-lg text-zinc-900 mb-2">Emergency Lifeline</h3>
-                <p className="text-zinc-500 text-sm">When the urges are too strong, click here to instantly connect with an anonymous peer.</p>
-              </div>
+            <div className="space-y-6">
+              <CounselorCard 
+                name="Victor Ikechukwu Okafor"
+                photo="/counsellors_picture&bio/Victor Ikechukwu Okafor.webp"
+                specialty="Addiction Counselor & Life Coach"
+                bio="Victor IK Okafor is a dedicated addiction counselor, life coach, and mentor committed to helping individuals break free from destructive patterns and rediscover purpose. With a strong passion for emotional wellness and personal transformation, he guides people through the journey of healing, self-awareness, and lasting change. Victor has a degree in Business Administration and half a decade's worth of experience in marketing. His approach is rooted in aligning the mind, emotions, and spirit with God’s truth, empowering individuals to overcome addiction, rebuild their lives, and develop healthier habits. He believes that true freedom comes from both inner healing and spiritual alignment, and he works closely with clients to uncover the root causes of their struggles while equipping them with practical tools for growth."
+              />
+              
+              <CounselorCard 
+                name="Angel Ochanya"
+                photo="/counsellors_picture&bio/Angel Ochanya.webp"
+                specialty="Holistic Well-being & Public Health"
+                bio="Angel is a counselor with a degree in Public Health and minister committed to healing, growth, and transformation. With years of ministry experience and a foundation in medical science, she provides support that nurtures both emotional well-being and holistic development."
+              />
             </div>
           </div>
         </div>
 
         {/* Right Column: Mini Utility Widget */}
         <div className="space-y-6">
+          <PersonalityCard 
+            type={user.personalityType || "ARCHITECT"} 
+            label={user.personalityLabel || ""} 
+            traits={user.personalityTraits || ""} 
+            description={user.personalityDescription || ""} 
+          />
+
           <div className="bg-white rounded-[2rem] p-6 border border-zinc-100 shadow-sm">
              <h3 className="font-bold text-lg text-zinc-900 mb-4 flex items-center gap-2">
                <MapPin className="text-emerald-500 w-5 h-5"/> Locators

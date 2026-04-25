@@ -12,6 +12,8 @@ export default function AuthPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -21,7 +23,7 @@ export default function AuthPage() {
     setLoading(true);
     setError("");
 
-    if (!email || !password) {
+    if (!email || !password || (!isLogin && (!firstName || !lastName))) {
       setError("Please fill in all fields.");
       setLoading(false);
       return;
@@ -39,7 +41,7 @@ export default function AuthPage() {
         const res = await fetch("/api/auth/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
+          body: JSON.stringify({ email, password, firstName, lastName }),
         });
         const data = await res.json();
 
@@ -99,6 +101,43 @@ export default function AuthPage() {
                 {error}
               </div>
             )}
+
+            {!isLogin && (
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="firstName" className="block text-sm font-medium text-zinc-700">
+                    First Name
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      id="firstName"
+                      type="text"
+                      required={!isLogin}
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      className="appearance-none block w-full bg-white text-zinc-900 px-4 py-3 border border-zinc-200 rounded-xl shadow-sm placeholder-zinc-400 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 transition-colors sm:text-sm"
+                      placeholder="Jane"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor="lastName" className="block text-sm font-medium text-zinc-700">
+                    Last Name
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      id="lastName"
+                      type="text"
+                      required={!isLogin}
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      className="appearance-none block w-full bg-white text-zinc-900 px-4 py-3 border border-zinc-200 rounded-xl shadow-sm placeholder-zinc-400 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 transition-colors sm:text-sm"
+                      placeholder="Doe"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
             
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-zinc-700">
@@ -139,6 +178,14 @@ export default function AuthPage() {
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
+              
+              {isLogin && (
+                <div className="flex justify-end mt-2">
+                  <Link href="/auth/forgot-password" className="text-sm font-semibold text-emerald-600 hover:text-emerald-500">
+                    Forgot password?
+                  </Link>
+                </div>
+              )}
             </div>
 
             {!isLogin && (
