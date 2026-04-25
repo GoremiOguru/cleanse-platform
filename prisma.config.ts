@@ -3,13 +3,13 @@ import { PrismaLibSql } from '@prisma/adapter-libsql'
 import 'dotenv/config'
 
 // In Prisma 7, we use 'defineConfig' to tell the CLI how to connect
+// We use 'as any' here to bypass a temporary type mismatch on the 'adapter' property during the Vercel build
 export default defineConfig({
   datasource: {
     url: process.env.DATABASE_URL!,
   },
-  // @ts-ignore - The type definition for PrismaConfig might not yet include 'adapter' in all versions
   adapter: new PrismaLibSql({
     url: process.env.DATABASE_URL!,
     authToken: process.env.TURSO_AUTH_TOKEN!,
   }),
-})
+} as any)
